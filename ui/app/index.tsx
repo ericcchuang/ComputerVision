@@ -36,16 +36,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { BrowserRouter } from 'react-router-dom';
-import { registerRootComponent } from 'expo';
-
-registerRootComponent(HomeScreen);
 
 enableScreens();
-
-export const unstable_settings = {
-  initialRouteName: "index",
-};
 
 export default function HomeScreen() {
   const cameraRef = useRef<any>(null);
@@ -593,286 +585,284 @@ export default function HomeScreen() {
   const busNumberSubmitRef = useRef<string>("");
 
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL || '/'}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack.Screen options={{ title: "Vehicle(s) Scanner" }} />
-        {/* Control Panel Before Scanning or Submitting */}
-        {busNumberRef.current === null && !cameraGranted && (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack.Screen options={{ title: "Vehicle(s) Scanner" }} />
+      {/* Control Panel Before Scanning or Submitting */}
+      {busNumberRef.current === null && !cameraGranted && (
+        <View style={[styles.busNumberContainer]}>
+          <CameraControls />
+        </View>
+      )}
+      {/* Control Panel After Scanning or Submitting */}
+      {busNumberRef.current != null && (
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
           <View style={[styles.busNumberContainer]}>
-            <CameraControls />
-          </View>
-        )}
-        {/* Control Panel After Scanning or Submitting */}
-        {busNumberRef.current != null && (
-          <View style={{ flex: 1, backgroundColor: "#fff" }}>
-            <View style={[styles.busNumberContainer]}>
-              <View
-                style={[styles.cardView, cardWidth, { alignItems: "center" }]}
-              >
-                <View style={{ flexDirection: "row", marginVertical: 16 }}>
-                  <TouchableOpacity onPress={handleScanAgain} style={{ flex: 1, alignContent: 'center', alignItems: 'center' }}>
-                    <Feather name="refresh-ccw" size={18} color="black" />
-                  </TouchableOpacity>
-                </View>
-                <View style={[styles.toggleRow]}>
-                  <EnableTTS />
-                </View>
+            <View
+              style={[styles.cardView, cardWidth, { alignItems: "center" }]}
+            >
+              <View style={{ flexDirection: "row", marginVertical: 16 }}>
+                <TouchableOpacity onPress={handleScanAgain} style={{ flex: 1, alignContent: 'center', alignItems: 'center' }}>
+                  <Feather name="refresh-ccw" size={18} color="black" />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.toggleRow]}>
+                <EnableTTS />
               </View>
             </View>
-            {/* Bus Info Card After Scanning or Submitting */}
-            <View style={[styles.textView]}>
-              {busInfo ? (
-                <ScrollView
-                  style={[styles.textView]}
-                  contentContainerStyle={{
-                    flexGrow: 1,
-                    alignItems: "center",
-                    marginHorizontal: 10,
-                  }}
-                >
-                  <View style={[styles.cardView, cardWidth]}>
-                    {(() => {
-                      const info = busInfo;
-
-                      console.log(info.passenger_load);
-                      let load = null;
-                      switch (info.passenger_load) {
-                        case "EMPTY":
-                          load = <EmptyIndicator />;
-                          break;
-                        case "HALF_EMPTY":
-                          load = <HalfEmptyIndicator />;
-                          break;
-                        case "FULL":
-                          load = <FullIndicator />;
-                          break;
-                        default:
-                          load = null;
-                          break;
-                      }
-
-                      return (
-                        <>
-                          <View style={[styles.textArea]}>
-                            {
-                              <Text style={styles.titleText}>
-                                {info.bus_number}
-                              </Text>
-                            }
-                            {load}
-                            {info.wheelchair_accessible === "Y" ? (
-                              <View style={[styles.wheelchair]}>
-                                <Text> </Text>
-                                <FontAwesome
-                                  name="wheelchair"
-                                  size={18}
-                                  color="blue"
-                                />
-                              </View>
-                            ) : (
-                              ""
-                            )}
-                            {info.delay === true ? (
-                              <Text style={styles.text}> (delayed)</Text>
-                            ) : (
-                              ""
-                            )}
-                          </View>
-                          {info.garage && (
-                            <Text style={[styles.subtitle]}>
-                              {info.garage} Garage
-                            </Text>
-                          )}
-                          {info.route && (
-                            <Text style={[styles.subtitle]}>
-                              Route {info.route}
-                            </Text>
-                          )}
-                          {info.destination && (
-                            <Text style={[styles.subtitle]}>
-                              To {processDestination(info.destination)}
-                            </Text>
-                          )}
-                          {info.location && manualSearchRef.current && (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                              }}
-                            >
-                              <View style={styles.icon}>
-                                <Entypo
-                                  name="location-pin"
-                                  size={16}
-                                  color="black"
-                                />
-                              </View>
-                              <Text style={styles.text}>
-                                {processLocation(info.location) + "  "}
-                              </Text>
-                              <TouchableOpacity
-                                style={styles.icon}
-                                onPress={() =>
-                                  openMap({
-                                    query: busInfo.location,
-                                    provider:
-                                      Platform.OS === "web"
-                                        ? getMobileOS() === "iOS"
-                                          ? "apple"
-                                          : "google"
-                                        : Platform.OS === "ios"
-                                          ? "apple"
-                                          : "google",
-                                  })
-                                }
-                              >
-                                <View style={styles.mapsLink}>
-                                  <Ionicons
-                                    name="open-outline"
-                                    size={16}
-                                    color="#0000EE"
-                                    style={{
-                                      paddingRight: 1,
-                                      paddingLeft: 2,
-                                      paddingBottom: 2,
-                                    }}
-                                  />
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-                          )}
-                          {info.timestamp && manualSearchRef.current && (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                              }}
-                            >
-                              <View style={styles.icon}>
-                                <FontAwesome6
-                                  name="clock"
-                                  size={16}
-                                  color="black"
-                                />
-                              </View>
-                              <Text style={styles.text}>
-                                {processTimestamp(info.timestamp)} (EST)
-                              </Text>
-                            </View>
-                          )}
-                          {info.seating_capacity && (
-                            <Text style={styles.text}>
-                              Seating Capacity: {info.seating_capacity}
-                            </Text>
-                          )}
-
-                          {info.error && <Text>Error: {info.error}</Text>}
-                        </>
-                      );
-                    })()}
-                  </View>
-                  {busImageRef.current != null && (
-                    <View style={[styles.cardView, cardWidth]}>
-                      <Image
-                        source={{
-                          uri: `data:image/png;base64,${busImageRef.current}`,
-                        }}
-                        style={styles.busImage}
-                      />
-                    </View>
-                  )}
-                </ScrollView>
-              ) : (
-                <Text>No Bus Info Returned from API</Text>
-              )}
-            </View>
           </View>
-        )}
-        {/* If Scanned, Bus Image is Shown */}
-        {!busInfo && (
-          <View
-            style={[
-              styles.cameraContainer,
-              isLandscape && {
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              },
-            ]}
-          >
-            {/* Camera View. If on Web, show slider, else, use pinch gesture detector */}
-            {permission?.granted === true && cameraGranted ? (
-              Platform.OS === "web" ? (
-                <>
-                  <ScannerView />
-                  <View style={styles.webSlider}>
-                    <TouchableOpacity
-                      style={{ flex: 1 }}
-                      onPress={() => {
-                        if (zoom - 0.1 >= 0) {
-                          setZoom(zoom - 0.1);
-                        } else {
-                          setZoom(0);
-                        }
-                      }}
-                    >
-                      <Feather name="zoom-out" size={18} color="black"></Feather>
-                    </TouchableOpacity>
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      value={zoom}
-                      onChange={(e) => setZoom(Number(e.currentTarget.value))}
-                      style={{ width: 150 }}
-                    />
-                    <TouchableOpacity
-                      style={{ flex: 1 }}
-                      onPress={() => {
-                        if (zoom + 0.1 <= 1) {
-                          setZoom(zoom + 0.1);
-                        } else {
-                          setZoom(1);
-                        }
-                      }}
-                    >
-                      <Feather name="zoom-in" size={18} color="black"></Feather>
-                    </TouchableOpacity>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <GestureDetector gesture={pinchGesture}>
-                    <CameraView
-                      ref={cameraRef}
-                      facing={"back"}
-                      zoom={zoom}
-                      style={cameraStyle}
-                      animateShutter={false}
-                      onCameraReady={handleCameraReady}
-                      pictureSize="highest"
-                    >
-                      <View style={styles.cameraControlView}>
-                        <CameraControls />
-                      </View>
-                    </CameraView>
-                  </GestureDetector>
-                </>
-              )
-            ) : (
-              <>
-                <View style={styles.cameraContainer}>
-                  <Button
-                    title="Enable Camera"
-                    onPress={requestPermissionsButton}
-                  />
+          {/* Bus Info Card After Scanning or Submitting */}
+          <View style={[styles.textView]}>
+            {busInfo ? (
+              <ScrollView
+                style={[styles.textView]}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  alignItems: "center",
+                  marginHorizontal: 10,
+                }}
+              >
+                <View style={[styles.cardView, cardWidth]}>
+                  {(() => {
+                    const info = busInfo;
+
+                    console.log(info.passenger_load);
+                    let load = null;
+                    switch (info.passenger_load) {
+                      case "EMPTY":
+                        load = <EmptyIndicator />;
+                        break;
+                      case "HALF_EMPTY":
+                        load = <HalfEmptyIndicator />;
+                        break;
+                      case "FULL":
+                        load = <FullIndicator />;
+                        break;
+                      default:
+                        load = null;
+                        break;
+                    }
+
+                    return (
+                      <>
+                        <View style={[styles.textArea]}>
+                          {
+                            <Text style={styles.titleText}>
+                              {info.bus_number}
+                            </Text>
+                          }
+                          {load}
+                          {info.wheelchair_accessible === "Y" ? (
+                            <View style={[styles.wheelchair]}>
+                              <Text> </Text>
+                              <FontAwesome
+                                name="wheelchair"
+                                size={18}
+                                color="blue"
+                              />
+                            </View>
+                          ) : (
+                            ""
+                          )}
+                          {info.delay === true ? (
+                            <Text style={styles.text}> (delayed)</Text>
+                          ) : (
+                            ""
+                          )}
+                        </View>
+                        {info.garage && (
+                          <Text style={[styles.subtitle]}>
+                            {info.garage} Garage
+                          </Text>
+                        )}
+                        {info.route && (
+                          <Text style={[styles.subtitle]}>
+                            Route {info.route}
+                          </Text>
+                        )}
+                        {info.destination && (
+                          <Text style={[styles.subtitle]}>
+                            To {processDestination(info.destination)}
+                          </Text>
+                        )}
+                        {info.location && manualSearchRef.current && (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <View style={styles.icon}>
+                              <Entypo
+                                name="location-pin"
+                                size={16}
+                                color="black"
+                              />
+                            </View>
+                            <Text style={styles.text}>
+                              {processLocation(info.location) + "  "}
+                            </Text>
+                            <TouchableOpacity
+                              style={styles.icon}
+                              onPress={() =>
+                                openMap({
+                                  query: busInfo.location,
+                                  provider:
+                                    Platform.OS === "web"
+                                      ? getMobileOS() === "iOS"
+                                        ? "apple"
+                                        : "google"
+                                      : Platform.OS === "ios"
+                                        ? "apple"
+                                        : "google",
+                                })
+                              }
+                            >
+                              <View style={styles.mapsLink}>
+                                <Ionicons
+                                  name="open-outline"
+                                  size={16}
+                                  color="#0000EE"
+                                  style={{
+                                    paddingRight: 1,
+                                    paddingLeft: 2,
+                                    paddingBottom: 2,
+                                  }}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                        {info.timestamp && manualSearchRef.current && (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <View style={styles.icon}>
+                              <FontAwesome6
+                                name="clock"
+                                size={16}
+                                color="black"
+                              />
+                            </View>
+                            <Text style={styles.text}>
+                              {processTimestamp(info.timestamp)} (EST)
+                            </Text>
+                          </View>
+                        )}
+                        {info.seating_capacity && (
+                          <Text style={styles.text}>
+                            Seating Capacity: {info.seating_capacity}
+                          </Text>
+                        )}
+
+                        {info.error && <Text>Error: {info.error}</Text>}
+                      </>
+                    );
+                  })()}
                 </View>
-              </>
+                {busImageRef.current != null && (
+                  <View style={[styles.cardView, cardWidth]}>
+                    <Image
+                      source={{
+                        uri: `data:image/png;base64,${busImageRef.current}`,
+                      }}
+                      style={styles.busImage}
+                    />
+                  </View>
+                )}
+              </ScrollView>
+            ) : (
+              <Text>No Bus Info Returned from API</Text>
             )}
           </View>
-        )}
-      </GestureHandlerRootView>
-    </BrowserRouter>
+        </View>
+      )}
+      {/* If Scanned, Bus Image is Shown */}
+      {!busInfo && (
+        <View
+          style={[
+            styles.cameraContainer,
+            isLandscape && {
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          {/* Camera View. If on Web, show slider, else, use pinch gesture detector */}
+          {permission?.granted === true && cameraGranted ? (
+            Platform.OS === "web" ? (
+              <>
+                <ScannerView />
+                <View style={styles.webSlider}>
+                  <TouchableOpacity
+                    style={{ flex: 1 }}
+                    onPress={() => {
+                      if (zoom - 0.1 >= 0) {
+                        setZoom(zoom - 0.1);
+                      } else {
+                        setZoom(0);
+                      }
+                    }}
+                  >
+                    <Feather name="zoom-out" size={18} color="black"></Feather>
+                  </TouchableOpacity>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={zoom}
+                    onChange={(e) => setZoom(Number(e.currentTarget.value))}
+                    style={{ width: 150 }}
+                  />
+                  <TouchableOpacity
+                    style={{ flex: 1 }}
+                    onPress={() => {
+                      if (zoom + 0.1 <= 1) {
+                        setZoom(zoom + 0.1);
+                      } else {
+                        setZoom(1);
+                      }
+                    }}
+                  >
+                    <Feather name="zoom-in" size={18} color="black"></Feather>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <>
+                <GestureDetector gesture={pinchGesture}>
+                  <CameraView
+                    ref={cameraRef}
+                    facing={"back"}
+                    zoom={zoom}
+                    style={cameraStyle}
+                    animateShutter={false}
+                    onCameraReady={handleCameraReady}
+                    pictureSize="highest"
+                  >
+                    <View style={styles.cameraControlView}>
+                      <CameraControls />
+                    </View>
+                  </CameraView>
+                </GestureDetector>
+              </>
+            )
+          ) : (
+            <>
+              <View style={styles.cameraContainer}>
+                <Button
+                  title="Enable Camera"
+                  onPress={requestPermissionsButton}
+                />
+              </View>
+            </>
+          )}
+        </View>
+      )}
+    </GestureHandlerRootView>
   );
 }

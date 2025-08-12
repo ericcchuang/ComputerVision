@@ -69,18 +69,10 @@
       "package": "com.njtransit.computervision"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
-      "publicPath": "/ComputerVision",
-      "output": "static",
-      "bundler": "metro",
-      "router": {
-        "type": "hash"
-      }
+      "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "router": {
-        "basePath": "/ComputerVision"
-      },
+      "router": {},
       "eas": {
         "projectId": "8f85c4b7-15ca-4aba-ac69-183a7208c59c"
       }

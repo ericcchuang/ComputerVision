@@ -1,16 +1,14 @@
-name: Combined CI/CD Develop
+name: Combined CI/CD Main Branch
 
 on:
   push:
-    paths:
-      - "api/**"
-      - ".github/workflows/workflows-dev.yml"
-      - "ui/**"
+    branches:
+      - main
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  DEV_API_SERVICE_NAME: dev-fastapi-service
-  DEV_GH_PAGES_SERVICE_NAME: dev-computervision
+  API_SERVICE_NAME: fastapi-service
+  GH_PAGES_SERVICE_NAME: computervision
   REGION: us-east4
   IMAGE_NAME: my-fastapi-app
 
@@ -61,7 +59,7 @@ jobs:
           context: ./api
           file: ./api/Dockerfile
           push: true
-          tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.DEV_API_SERVICE_NAME }}:${{ github.sha }}
+          tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.API_SERVICE_NAME }}:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
@@ -74,8 +72,8 @@ jobs:
         id: deploy_cloud_run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ env.DEV_API_SERVICE_NAME }}
-          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.DEV_API_SERVICE_NAME }}:${{ github.sha }}
+          service: ${{ env.API_SERVICE_NAME }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}/${{ env.API_SERVICE_NAME }}:${{ github.sha }}
           region: ${{ env.REGION }}
           flags: "--allow-unauthenticated --memory=2Gi --cpu=4 --concurrency=4 --timeout=10m5s"
 
@@ -287,7 +285,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy $DEV_GH_PAGES_SERVICE_NAME \
+          gcloud run deploy $GH_PAGES_SERVICE_NAME \
             --image gcr.io/${{ secrets.GH_PAGES_GCP_PROJECT_ID }}/${{ secrets.GH_DOCKER_IMAGE_NAME }}:latest \
             --platform managed \
             --region us-east4 \
@@ -336,7 +334,7 @@ jobs:
           git add docs/artifacts.json docs/index.html
           git commit -m "Add artifact index for commit $COMMIT_SHA"
           git push
-    
+
   ci:
     runs-on: ubuntu-latest
     steps:
