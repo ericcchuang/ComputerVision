@@ -70,7 +70,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "publicPath": "/_expo/"
+      "publicPath": "/_expo/",
+      "output": "static"
     },
     "extra": {
       "router": {},
