@@ -1,0 +1,164 @@
+# ComputerVision
+
+ComputerVision is an application that can take an image and returns what is the predicted bus number. The detection is built on OpenVINO open source machine learning libraries in Python and hosted on a FastAPI Server, and the interfact is built on React Native allowing exports to web, iOS, and Android via GitHub actions pipelines. 
+
+**Table of Contents**
+1. [Backend Setup (/api)](#backend-setup-api)
+   - [Detection Model](#detection-model)
+   - [Voice Commands](#voice-commands)
+2. [Frontend (/ui)](#frontend-ui)
+3. [Pipelines](#pipelines)
+4. [iOS Ad-Hoc Distribution: Adding Device UUIDs](#ios-ad-hoc-distribution-adding-device-uuids)
+
+## Backend Setup (/api)
+
+Files for the backend are found in the `/api` folder. In order to get the backend to run locally, you will have to set up a few things on your system. [**Python 3.11.9**](https://www.python.org/downloads/release/python-3119/) and [**ffmpeg**](https://ffmpeg.org/) need to be installed locally.
+
+If you have chocolatey, you can install ffmpeg via powershell as administrator.
+```powershell
+choco install ffmpeg
+```
+
+Ensure both are in your system's PATH before proceeding.
+
+---
+
+### Detection Model
+
+The detection is built on two models running in series by OpenVINO:
+
+   - [**Vehicle Recognition Model**](https://docs.openvino.ai/2024/notebooks/vehicle-detection-and-recognition-with-output.html)
+   - [**OCR Model**](https://docs.openvino.ai/2024/notebooks/optical-character-recognition-with-output.html)
+
+Files for the model are found in the `/api` folder. These models run on **Python 3.11.9**. To run locally, run
+
+```powershell
+cd api
+python3.11 -m venv venv # Will fail if Python 3.11 is not installed
+venv/Scripts/activate
+pip install -r requirements.txt
+uvicorn fast:app --host localhost --port 8000
+```
+
+This downloads the models and runs a local FastAPI server hosting `fast.py` on `localhost:8000`. Go to `localhost:8000/docs` to test the different endpoints. 
+
+The app has 4 endpoints, with 2 endpoints for detection
+- **scanBusNumber** - takes an image, runs vehicle detection, then OCR, checks OCR output for valid strings (based on "valid_vehicle_ids" in `options.json`), checks it against valid vehicle numbers in `VEHICLE_DATA.json`, and returns vehicle data. If the image passes all of these checks, it also returns the variable "detection" to true, which is used in the frontend to determine a successful scan.
+- **busInfo** - takes a number (string), and returns vehicle data
+
+Vehicle data is called from NJ Transit's Clever Devices ("endpoint" in `options.json`), and `VEHICLE_INFO.json`. `garage_map.json` converts "AssignedLocation" from `VEHICLE_INFO.json` into its actual location.
+
+The backend also interfaces with the Google Maps API to convert lat and lon into a readable address. To run the API locally, generate an API key from Google Cloud Platform and store it in an the `.env` file. To run it on the cloud you will need it in the environment variables.
+
+---
+
+### Voice Commands
+Voice commands are an incomplete backend feature that allows users to interact with the app via microphone. It requires ffmpeg and uses an OpenVINO Model and 2 API endpoints.
+
+- [**Speech to Text Model**](https://docs.openvino.ai/2023.3/notebooks/211-speech-to-text-with-output.html)
+- **speechEndpoint, silenceEndpoint**
+
+On the information screen, if the microphone is enabled, users can speak a wake word (currently any word) followed by a command. Commands are fuzzed using the list "commands_list" in `options.json`, and valid commands are generated based on both the fuzzed list and the return fields from the API. Most commands simply activate text to speech for that return field.
+
+## Frontend (/ui)
+
+The frontend is built on React Native and built using Expo in the `/ui` folder. The source code is located in (`ui/app/index.tsx`) To build the frontend locally, run
+
+```powershell
+cd ui
+npm install
+
+# to host web locally
+npx expo start --offline --web
+```
+
+To compile to Android or iOS, refer to [the Expo documentation](https://docs.expo.dev/guides/local-app-development/).
+The mobile deploy will require installing the Expo Go app to preview. The web preview will be hosted on `localhost:8081` and can be accessed via your computer's IP address (ipconfig).
+
+The front end has two ways of interacting with the backend. If the camera is on, it will repeatedly send an image to the backend until the backend returns detection as true. You can also type a number into the text input and receive data that way.
+
+There is also support for text to speech and voice commands (unfinished, see below). If text to speech is enabled, it reads out the information returned by the backend.
+
+## Pipelines
+Both the API and web frontend are deployed via GitHub actions pipeline to Google Cloud. `fastapi-gcp` deploys the backend, and `gcp-deploy-site` deploys the web frontend. Both of these pipelines utilize Docker containers and their respective folder's Dockerfile.
+
+`android-ci` and `ios-signed-ipa` build .apk and .ipa files respectively. More info about the `ios-signed-ipa` pipeline below.
+
+`artifact-download-page` writes the `/docs` folder, which creates an .html file with .apk and .ipa files generated by the previous build. This gets deployed to GitHub pages when merged into the  develop branch.
+
+## iOS Ad-Hoc Distribution: Adding Device UUIDs
+
+For iOS ad-hoc distribution, each testing device’s **UUID must be included** in the build. Below are two methods for registering devices with your Apple Developer account and making them available for EAS builds.
+
+---
+
+### Method 1: EAS Link to Testing Device (Easiest)
+
+1. Run the following command in your terminal:
+
+   ```bash
+   eas device:create
+   ```
+
+2. Follow the prompts to:
+   - Choose your EAS account
+   - Sign in to your Apple ID
+
+3. When prompted for a method, choose:
+   -  Website - generates a registration URL to be opened on your devices
+
+4. On the testing device:
+   - Scan the QR code
+   - Download and install the provisioning profile via the Settings app
+
+5. Rebuild the `.ipa` file and share it with the device.
+
+---
+
+### Method 2: Add Devices via Apple Developer Portal
+
+1. Go to [Apple Developer Portal](https://developer.apple.com/account/resources/devices/list)  
+   Navigate to:  **Certificates, Identifiers & Profiles** → **Devices**
+
+2. Manually add:
+   - Device Name
+   - Device UUID
+
+3. Back in your terminal, run:
+
+   ```bash
+   eas device:create
+   ```
+
+4. Follow prompts to:
+   - Select your EAS account
+   - Sign into your Apple Developer account
+
+5. When prompted, choose:
+   - Developer Portal - import devices already registered on Apple Developer Portal
+
+6. Select the desired device(s) from the list and hit `Enter`.
+
+---
+
+### Expired Certificates?
+
+If your certificate expires, you can generate a new one:
+
+```bash
+eas credentials
+```
+
+- This will allow you to **create and import a new signing certificate** using your Apple Developer account.
+- You may need to **erase the expired certificate first** via Apple Developer website.
+
+---
+
+### Install the IPA on your phone
+
+**Method 1.** iTunes with wired connection
+- Connect your phone to your computer, and drag and drop the .ipa file into your phone via iTunes
+- Make sure you have "trusted" your computer on your phone
+
+**Method 2.** installonair.com
+- Upload your ipa to installonair.com and scan the QR code it gives you
