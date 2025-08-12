@@ -219,36 +219,6 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-
-      - name: Fix asset paths for GitHub Pages repo subpath
-        run: |
-          sed -i 's/src="\/_expo\//src="\/ComputerVision\/_expo\//g' dist/index.html
-          sed -i 's/href="\/_expo\//href="\/ComputerVision\/_expo\//g' dist/index.html
-          sed -i 's/src="\/static\//src="\/ComputerVision\/static\//g' dist/index.html
-          sed -i 's/href="\/static\//href="\/ComputerVision\/static\//g' dist/index.html
-          
-      - name: List dist contents for debug
-        run: ls -R dist
-
-      - name: Extract entry JS filename from index.html
-        id: extract-entry
-        run: |
-          ENTRY_FILE=$(grep -Poi '(?<=src=[\"\x27])[^\"\x27]*entry-[^\"\x27]*\.js' dist/index.html | head -1)
-          ENTRY_FILE="${ENTRY_FILE#/}"                      # Remove leading slash
-          ENTRY_FILE="${ENTRY_FILE#ComputerVision/}"       # Strip 'ComputerVision/' prefix
-          echo "entry=$ENTRY_FILE" >> $GITHUB_OUTPUT
-
-      - name: Verify entry JS file exists
-        run: |
-          ENTRY_FILE="${{ steps.extract-entry.outputs.entry }}"
-          ENTRY_PATH="dist/$ENTRY_FILE"
-          echo "Checking for $ENTRY_PATH"
-          if [ ! -f "$ENTRY_PATH" ]; then
-            echo "Entry JS file referenced in index.html not found: $ENTRY_PATH"
-            exit 1
-          fi
-          echo "Entry JS file found."
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
