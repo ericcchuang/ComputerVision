@@ -69,7 +69,8 @@
       "package": "com.njtransit.computervision"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "publicPath": "/_expo/"
     },
     "extra": {
       "router": {},
