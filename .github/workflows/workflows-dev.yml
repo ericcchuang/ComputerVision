@@ -7,6 +7,11 @@ on:
       - ".github/workflows/workflows-dev.yml"
       - "ui/**"
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   DEV_API_SERVICE_NAME: dev-fastapi-service
