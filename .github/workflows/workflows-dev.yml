@@ -217,7 +217,7 @@ jobs:
         run: npm ci
       - name: Build Expo Web
         run: |
-            npx expo export --platform web
+            npx expo export --platform web --output-dir dist
             touch dist/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
