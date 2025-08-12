@@ -219,6 +219,29 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
+
+      - name: List dist contents for debug
+        run: ls -R dist
+
+      - name: Extract entry JS filename from index.html
+        id: extract-entry
+        run: |
+          ENTRY_FILE=$(grep -Po '(?<=src=")[^"]*entry-[^"]*\.js' dist/index.html | head -1)
+          echo "Found entry file in index.html: $ENTRY_FILE"
+          # Remove leading slash if present
+          ENTRY_FILE=${ENTRY_FILE#/}
+          echo "::set-output name=entry::$ENTRY_FILE"
+
+      - name: Verify entry JS file exists
+        run: |
+          ENTRY_PATH="dist/$ENTRY_FILE"
+          echo "Checking for $ENTRY_PATH"
+          if [ ! -f "$ENTRY_PATH" ]; then
+            echo "Entry JS file referenced in index.html not found: $ENTRY_PATH"
+            exit 1
+          fi
+          echo "Entry JS file found."
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
