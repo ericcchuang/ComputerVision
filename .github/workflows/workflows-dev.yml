@@ -240,6 +240,10 @@ jobs:
         run: |
           echo "📦 Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
+      - name: Modify script src paths in index.html
+        run: |
+          # Ensure script paths are absolute and include the correct base URL
+          sed -i 's|<script src="/static/js/web/|<script src="https://ericcchuang.github.io/ComputerVision/_expo/static/js/web/|' dist/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
