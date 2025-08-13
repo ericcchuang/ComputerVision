@@ -1,7 +1,7 @@
-import { Stack } from "expo-router";
+import { Stack, Slot } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack
+  return < Slot />; {/*<Stack
     screenOptions={{
       headerStyle: {
         backgroundColor: "#f5843d",
@@ -13,5 +13,5 @@ export default function RootLayout() {
       },
       headerTitleAlign: "center",
     }} >
-  </Stack>;
+  </Stack>;*/}
 }
