@@ -1,4 +1,9 @@
-import { Stack, Slot } from "expo-router";
+import { Stack } from "expo-router";
+import Constants from "expo-constants";
+
+export const unstable_settings = {
+  basePath: Constants.expoConfig?.extra?.routerBasePath || "/",
+};
 
 export default function RootLayout() {
   return (
@@ -15,7 +20,6 @@ export default function RootLayout() {
         headerTitleAlign: "center",
       }}
     >
-      <Slot />
-    </Stack>
+      \\    </Stack>
   );
 }
