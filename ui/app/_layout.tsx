@@ -15,7 +15,7 @@ export default function RootLayout() {
         headerTitleAlign: "center",
       }}
     >
-      <Slot />
+      <Stack.Screen name="index" options={{ title: "Home" }} />
     </Stack>
   );
 }
