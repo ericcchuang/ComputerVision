@@ -224,6 +224,9 @@ jobs:
           ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
           ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
           sed -i "s|<script src=\"/_expo/static/js/web/entry-[^\"]*\.js\"|<script src=\"/ComputerVision/_expo/static/js/web/$ENTRY_JS_BASENAME\"|" dist/index.html
+      - name: Fix asset paths for GitHub Pages
+        run: |
+          find dist -type f -name "*.html" -exec sed -i 's|src="/assets/|src="/ComputerVision/assets/|g' {} +
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
