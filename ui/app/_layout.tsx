@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-import Constants from "expo-constants";
 
 export default function RootLayout() {
   return (
@@ -16,6 +15,7 @@ export default function RootLayout() {
         headerTitleAlign: "center",
       }}
     >
-      \\    </Stack>
+      <Stack.Screen name="index" options={{ title: "Home" }} />
+    </Stack>
   );
 }
