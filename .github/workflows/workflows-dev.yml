@@ -218,7 +218,7 @@ jobs:
       - name: Build Expo Web
         run: |
             npx expo export --platform web --output-dir dist
-            echo "" > ui/dist/.nojekyll
+            echo "" > dist/.nojekyll
 
       - name: List dist contents for debug
         run: ls -R dist
