@@ -230,10 +230,10 @@ jobs:
         run: |
           # Remove any accidental _expo prefix in the script src paths
           sed -i 's|/static/js/web/_expo|/static/js/web|' dist/index.html
-      - name: Modify script src in index.html (for correct path)
+      - name: Correct script src paths in index.html (fix concatenation)
         run: |
-          # Correctly replace script src URLs
-          sed -i 's|/static/js/web/|https://ericcchuang.github.io/ComputerVision/static/js/web/|g' dist/index.html
+          # Fix URL concatenation issue and replace relative paths with the full URL
+          sed -i 's|<script src="\(\/static\/js\/web\/entry-[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision\1"|' dist/index.html
       - name: Log modified index.html (after modification)
         run: |
           cat dist/index.html
