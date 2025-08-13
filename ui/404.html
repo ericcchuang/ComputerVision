@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="refresh" content="0; url=/ComputerVision/" />
+</head>
+
+<body>
+    <script>
+        // Redirect to index.html and preserve the path for SPA routing
+        var pathname = window.location.pathname.replace('/ComputerVision', '');
+        window.location.replace('/ComputerVision/?redirect=' + pathname + window.location.search + window.location.hash);
+    </script>
+</body>
+
+</html>
