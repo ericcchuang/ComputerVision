@@ -226,10 +226,10 @@ jobs:
         run: |
           # Modify the base href to reflect /ComputerVision/_expo/
           sed -i 's|<base href=".*"|<base href="/ComputerVision/_expo/"|' dist/index.html
-      - name: Correct script src paths in index.html (fix concatenation)
+      - name: Modify script src paths in index.html (make them absolute URLs)
         run: |
-          # Ensure paths to scripts are absolute, remove accidental _expo, and prepend with full URL
-          sed -i 's|<script src="\(\/static\/js\/web\/[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision/_expo\1"|' dist/index.html
+          # Update script URLs to full URLs, prepend with the correct GitHub Pages URL
+          sed -i 's|<script src="\(/static/js/web/entry-[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision/_expo\1"|' dist/index.html
       - name: Log modified index.html (after modification)
         run: |
           cat dist/index.html
