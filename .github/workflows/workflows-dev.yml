@@ -219,6 +219,10 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
+      - name: Log built JS files (debug)
+        run: |
+          echo "📦 Listing JS files in dist:"
+          find dist -type f -name "*.js" | sort
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
