@@ -21,6 +21,8 @@ env:
 
 jobs:
   api:
+    if:
+      false
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -89,6 +91,8 @@ jobs:
           echo "Cloud Run service URL: ${{ steps.deploy_cloud_run.outputs.url }}"
 
   android:
+    if:
+      false
     runs-on: ubuntu-latest
     defaults:
       run:
