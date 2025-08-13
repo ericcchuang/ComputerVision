@@ -219,9 +219,11 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-      - name: Modify base href in index.html
+      - name: Update entry JS reference in index.html
         run: |
-          sed -i 's|<script src="\/_expo\/static\/js\/web\/entry-[^"]*\.js"|<script src="https://ericcchuang.github.io/ComputerVision/_expo/static/js/web/entry-17cc9f787f4a73aa393c6911010ce384.js"|' dist/index.html
+          ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
+          ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
+          sed -i "s|<script src=\"/_expo/static/js/web/entry-[^\"]*\.js\"|<script src=\"/_expo/static/js/web/$ENTRY_JS_BASENAME\"|" dist/index.html
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
