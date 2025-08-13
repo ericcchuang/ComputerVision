@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, Slot } from "expo-router";
 
 export default function RootLayout() {
   return (
@@ -15,7 +15,7 @@ export default function RootLayout() {
         headerTitleAlign: "center",
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Home" }} />
+      <Slot />
     </Stack>
   );
 }
