@@ -2,6 +2,10 @@ name: Combined CI/CD Develop
 
 on:
   push:
+    paths:
+      - "api/**"
+      - ".github/workflows/workflows-dev.yml"
+      - "ui/**"
 
 permissions:
   contents: write
@@ -203,6 +207,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -236,10 +243,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ui/dist
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist
+          publish_dir: ui/dist
           publish_branch: gh-pages

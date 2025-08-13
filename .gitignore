@@ -11,9 +11,6 @@ ui/web-build/
 ui/expo-env.d.ts
 ui/android/
 ui/ios/
-.expo/
-dist/
-web-build/
 
 # Native
 .kotlin/
