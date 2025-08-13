@@ -217,14 +217,21 @@ jobs:
         run: npm ci
       - name: Build Expo Web
         run: |
-            npx expo export --platform web --output-dir dist
-            echo "" > dist/.nojekyll
+          npx expo export --platform web --output-dir dist
+          echo "" > dist/.nojekyll
       - name: Modify base href in index.html
         run: |
-          sed -i 's|<script src="\/_expo\/static\/js\/web\/entry-[^"]*\.js"|<script src="https://ericcchuang.github.io/ComputerVision/_expo/static/js/web/entry-17cc9f787f4a73aa393c6911010ce384.js"|' dist/index.html
+          # Modify the base href to reflect /ComputerVision
+          sed -i 's|<base href=".*"|<base href="/ComputerVision/"|' dist/index.html
+      - name: Add 404.html fallback (for SPA routing)
+        run: |
+          echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=./index.html'></head><body><p>Redirecting...</p></body></html>" > dist/404.html
+      - name: Log modified index.html (debug)
+        run: |
+          cat dist/index.html
       - name: Log built JS files (debug)
         run: |
-          echo "Listing JS files in dist:"
+          echo "📦 Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -232,12 +239,6 @@ jobs:
           path: ui/dist
 
   deploy:
-    defaults:
-      run:
-        working-directory: ui/dist
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
