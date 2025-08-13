@@ -219,9 +219,13 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
+      - name: Modify base href in index.html
+        run: |
+          # Use sed to modify the base href tag inline in index.html
+          sed -i 's|<base href=".*"|<base href="/ComputerVision/_expo/"|' dist/ComputerVision/_expo/index.html
       - name: Log built JS files (debug)
         run: |
-          echo "📦 Listing JS files in dist:"
+          echo "Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
