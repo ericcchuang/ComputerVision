@@ -219,6 +219,7 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
+            sed -i 's|/_expo/|/ComputerVision/_expo/|g' dist/index.html
 
       - name: List dist contents for debug
         run: ls -R dist
