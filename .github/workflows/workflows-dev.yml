@@ -227,16 +227,12 @@ jobs:
         id: extract-entry
         run: |
           ENTRY_FILE=$(grep -Poi '(?<=src=[\"\x27])[^\"\x27]*entry-[^\"\x27]*\.js' dist/index.html | head -1)
-          echo "Found entry file in index.html: $ENTRY_FILE"
-          ENTRY_FILE=${ENTRY_FILE#/}  # Remove leading slash
-          if [ -z "$ENTRY_FILE" ]; then
-            echo "ERROR: No entry JS file found in index.html"
-            exit 1
-          fi
+          ENTRY_FILE=${ENTRY_FILE#/}
           echo "entry=$ENTRY_FILE" >> $GITHUB_OUTPUT
 
       - name: Verify entry JS file exists
         run: |
+          ENTRY_FILE="${{ steps.extract-entry.outputs.entry }}"
           ENTRY_PATH="dist/$ENTRY_FILE"
           echo "Checking for $ENTRY_PATH"
           if [ ! -f "$ENTRY_PATH" ]; then
