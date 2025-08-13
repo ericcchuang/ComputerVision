@@ -249,10 +249,10 @@ jobs:
           fi
           echo "Entry JS file found."
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                path: ui/dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ui/dist
 
   deploy:
     defaults:
