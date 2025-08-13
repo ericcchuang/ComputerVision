@@ -2,10 +2,6 @@ name: Combined CI/CD Develop
 
 on:
   push:
-    paths:
-      - "api/**"
-      - ".github/workflows/workflows-dev.yml"
-      - "ui/**"
 
 permissions:
   contents: write
