@@ -217,7 +217,7 @@ jobs:
         run: npm ci
       - name: Build Expo Web
         run: |
-            npx expo export --platform web --output-dir dist
+            npx expo export --platform web --output-dir dist --public-url https://ericcchuang.github.io/ComputerVision/
             echo "" > dist/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
