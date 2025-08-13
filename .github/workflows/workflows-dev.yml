@@ -234,7 +234,8 @@ jobs:
         id: extract-entry
         run: |
           ENTRY_FILE=$(grep -Poi '(?<=src=[\"\x27])[^\"\x27]*entry-[^\"\x27]*\.js' dist/index.html | head -1)
-          ENTRY_FILE=${ENTRY_FILE#/}
+          ENTRY_FILE="${ENTRY_FILE#/}"                      # Remove leading slash
+          ENTRY_FILE="${ENTRY_FILE#ComputerVision/}"       # Strip 'ComputerVision/' prefix
           echo "entry=$ENTRY_FILE" >> $GITHUB_OUTPUT
 
       - name: Verify entry JS file exists
@@ -248,10 +249,10 @@ jobs:
           fi
           echo "Entry JS file found."
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ui/dist
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                path: ui/dist
 
   deploy:
     defaults:
