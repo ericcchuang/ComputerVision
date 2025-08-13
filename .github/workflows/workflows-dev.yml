@@ -221,7 +221,7 @@ jobs:
             echo "" > dist/.nojekyll
       - name: Modify base href in index.html
         run: |
-          sed -i 's|<script src="/_expo/static/js/web/entry-[^"]*\.js"|<script src="/ComputerVision/_expo/static/js/web/entry-17cc9f787f4a73aa393c6911010ce384.js"|' dist/ComputerVision/_expo/static/js/web/index.html      
+          sed -i 's|<script src="/_expo/static/js/web/entry-[^"]*\.js"|<script src="/ComputerVision/_expo/static/js/web/entry-17cc9f787f4a73aa393c6911010ce384.js"|' dist/_expo/static/js/web/index.html      
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
