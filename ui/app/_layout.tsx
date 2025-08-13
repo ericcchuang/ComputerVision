@@ -12,5 +12,6 @@ export default function RootLayout() {
         fontFamily: "Arial",
       },
       headerTitleAlign: "center",
-    }} />;
+    }} >
+  </Stack>;
 }
