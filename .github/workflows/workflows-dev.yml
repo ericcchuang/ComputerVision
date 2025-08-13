@@ -219,8 +219,14 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-            sed -i 's|/_expo/|/ComputerVision/_expo/|g' dist/index.html
 
+      - name: Fix asset paths for GitHub Pages repo subpath
+        run: |
+          sed -i 's/src="\/_expo\//src="\/ComputerVision\/_expo\//g' dist/index.html
+          sed -i 's/href="\/_expo\//href="\/ComputerVision\/_expo\//g' dist/index.html
+          sed -i 's/src="\/static\//src="\/ComputerVision\/static\//g' dist/index.html
+          sed -i 's/href="\/static\//href="\/ComputerVision\/static\//g' dist/index.html
+          
       - name: List dist contents for debug
         run: ls -R dist
 
