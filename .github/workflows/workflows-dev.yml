@@ -225,7 +225,7 @@ jobs:
           sed -i 's|<base href=".*"|<base href="/ComputerVision/"|' dist/index.html
       - name: Modify script src in index.html (for correct path)
         run: |
-          # Modify script URLs to use the full URL
+          # Correctly replace script src URLs
           sed -i 's|/static/js/web/|https://ericcchuang.github.io/ComputerVision/static/js/web/|' dist/index.html
       - name: Add 404.html fallback (for SPA routing)
         run: |
