@@ -70,7 +70,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "publicPath": "/_expo/",
+      "publicPath": "/ComputerVision/_expo/",
       "output": "static"
     },
     "extra": {
