@@ -1,16 +1,21 @@
-import { Stack } from "expo-router";
+import { Stack, Slot } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#f5843d",
-      },
-      headerTintColor: "#fff",
-      headerTitleStyle: {
-        fontWeight: "bold",
-        fontFamily: "Arial",
-      },
-      headerTitleAlign: "center",
-    }} />;
+  return (
+    <>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#f5843d",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontFamily: "Arial",
+          },
+          headerTitleAlign: "center",
+        }} />
+      <Slot />
+    </>
+  );
 }
