@@ -237,8 +237,8 @@ jobs:
         run: |
           echo "Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
-      - name: Add 404.html for client-side routing
-        run: cp 404.html dist/404.html
+      - name: Add 404.html for SPA routing
+        run: cp dist/index.html dist/404.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -249,17 +249,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ui/dist
           publish_branch: gh-pages
-
-  #deploy:
-  #  defaults:
-  #    run:
-  #      working-directory: ui/dist
-  #  runs-on: ubuntu-latest
-  #  needs: build
-  #  steps:
-  #    - name: Deploy to gh-pages branch
-  #      uses: peaceiris/actions-gh-pages@v4
-  #      with:
-  #        github_token: ${{ secrets.GITHUB_TOKEN }}
-  #        publish_dir: ui/dist
-  #        publish_branch: gh-pages
