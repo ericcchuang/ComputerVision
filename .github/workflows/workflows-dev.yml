@@ -219,7 +219,6 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-            sed -i 's|src="/_expo/|src="/ComputerVision/_expo/|g' dist/index.html
       - name: Log built JS files (debug)
         run: |
           echo "📦 Listing JS files in dist:"
