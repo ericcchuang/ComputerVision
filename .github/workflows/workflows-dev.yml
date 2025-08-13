@@ -219,20 +219,27 @@ jobs:
         run: |
           npx expo export --platform web --output-dir dist
           echo "" > dist/.nojekyll
+      - name: Log original index.html (before modification)
+        run: |
+          cat dist/index.html
       - name: Modify base href in index.html
         run: |
           # Modify the base href to reflect /ComputerVision
           sed -i 's|<base href=".*"|<base href="/ComputerVision/"|' dist/index.html
+      - name: Remove _expo from script src in index.html (if present)
+        run: |
+          # Remove any accidental _expo prefix in the script src paths
+          sed -i 's|/static/js/web/_expo|/static/js/web|' dist/index.html
       - name: Modify script src in index.html (for correct path)
         run: |
           # Correctly replace script src URLs
-          sed -i 's|/static/js/web/|https://ericcchuang.github.io/ComputerVision/static/js/web/|' dist/index.html
+          sed -i 's|/static/js/web/|https://ericcchuang.github.io/ComputerVision/static/js/web/|g' dist/index.html
+      - name: Log modified index.html (after modification)
+        run: |
+          cat dist/index.html
       - name: Add 404.html fallback (for SPA routing)
         run: |
           echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=./index.html'></head><body><p>Redirecting...</p></body></html>" > dist/404.html
-      - name: Log modified index.html (debug)
-        run: |
-          cat dist/index.html
       - name: Log built JS files (debug)
         run: |
           echo "📦 Listing JS files in dist:"
