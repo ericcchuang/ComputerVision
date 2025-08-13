@@ -71,11 +71,13 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "publicPath": "/ComputerVision/",
-      "output": "single"
+      "output": "single",
+      "router": {
+        "basename": "/ComputerVision"
+      }
     },
     "extra": {
       "router": {},
-      "routerBasePath": "/ComputerVision",
       "eas": {
         "projectId": "8f85c4b7-15ca-4aba-ac69-183a7208c59c"
       }
