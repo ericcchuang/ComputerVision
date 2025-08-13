@@ -226,10 +226,18 @@ jobs:
       - name: Extract entry JS filename from index.html
         id: extract-entry
         run: |
-          ENTRY_FILE=$(sed -n 's/.*src="\([^"]*entry-[^"]*\.js\)".*/\1/p' dist/index.html | head -1)
+          echo "First 20 lines of index.html:"
+          head -n 20 dist/index.html
+
+          ENTRY_FILE=$(grep -Poi '(?<=src=[\"\x27])[^\"\x27]*entry-[^\"\x27]*\.js' dist/index.html | head -1)
           echo "Found entry file in index.html: $ENTRY_FILE"
-          # Remove leading slash if present
-          ENTRY_FILE=${ENTRY_FILE#/}
+
+          ENTRY_FILE=${ENTRY_FILE#/}  # Remove leading slash if present
+          if [ -z "$ENTRY_FILE" ]; then
+            echo "ERROR: No entry JS file found in index.html"
+            exit 1
+          fi
+
           echo "::set-output name=entry::$ENTRY_FILE"
 
       - name: Verify entry JS file exists
