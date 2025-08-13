@@ -238,7 +238,8 @@ jobs:
           echo "Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
       - name: Add 404.html for SPA routing
-        run: cp dist/index.html dist/404.html
+        run: |
+          echo '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>Redirecting...</title><script>window.location.replace("/ComputerVision/#/");</script></head><body><p>Redirecting to homepage...</p></body></html>' > dist/404.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

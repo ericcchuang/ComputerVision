@@ -73,7 +73,7 @@
       "publicPath": "/ComputerVision/",
       "output": "single",
       "router": {
-        "basename": "/ComputerVision"
+        "type": "hash"
       }
     },
     "extra": {
