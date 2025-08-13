@@ -71,7 +71,7 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "publicPath": "/ComputerVision/",
-      "output": "static"
+      "output": "single"
     },
     "extra": {
       "router": {},
