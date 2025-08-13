@@ -2,7 +2,7 @@
   "name": "computervision",
   "version": "1.0.0",
   "main": "expo-router/entry",
-  "homepage": "https://ericcchuang.github.io/ComputerVision/_expo",
+  "homepage": "https://ericcchuang.github.io/ComputerVision/",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",

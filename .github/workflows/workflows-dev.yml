@@ -219,10 +219,6 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-      - name: Patch asset paths for GitHub Pages
-        run: |
-          find dist -type f -name "*.html" -exec sed -i 's|="/_expo/|="/ComputerVision/_expo/|g' {} +
-          find dist -type f -name "*.js" -exec sed -i 's|="/_expo/|="/ComputerVision/_expo/|g' {} +
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
