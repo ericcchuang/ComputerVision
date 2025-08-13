@@ -221,7 +221,7 @@ jobs:
         run: npm ci
       - name: Build Expo Web
         run: |
-            npx expo export --platform web --output-dir dist
+            npx expo build:web --output dist
             echo "" > dist/.nojekyll
       - name: Update entry JS reference in index.html
         run: |
