@@ -224,16 +224,12 @@ jobs:
           cat dist/index.html
       - name: Modify base href in index.html
         run: |
-          # Modify the base href to reflect /ComputerVision
-          sed -i 's|<base href=".*"|<base href="/ComputerVision/"|' dist/index.html
-      - name: Remove _expo from script src in index.html (if present)
-        run: |
-          # Remove any accidental _expo prefix in the script src paths
-          sed -i 's|/static/js/web/_expo|/static/js/web|' dist/index.html
+          # Modify the base href to reflect /ComputerVision/_expo/
+          sed -i 's|<base href=".*"|<base href="/ComputerVision/_expo/"|' dist/index.html
       - name: Correct script src paths in index.html (fix concatenation)
         run: |
-          # Fix URL concatenation issue and replace relative paths with the full URL
-          sed -i 's|<script src="\(\/static\/js\/web\/entry-[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision\1"|' dist/index.html
+          # Ensure paths to scripts are absolute, remove accidental _expo, and prepend with full URL
+          sed -i 's|<script src="\(\/static\/js\/web\/[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision/_expo\1"|' dist/index.html
       - name: Log modified index.html (after modification)
         run: |
           cat dist/index.html
