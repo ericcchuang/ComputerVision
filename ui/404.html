@@ -2,15 +2,22 @@
 <html>
 
 <head>
-    <meta http-equiv="refresh" content="0; url=/ComputerVision/" />
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+        // Redirect to the correct SPA route
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var hash = window.location.hash;
+        // Only redirect if not already at /ComputerVision/
+        if (!path.startsWith('/ComputerVision/')) {
+            window.location.replace('/ComputerVision' + path + search + hash);
+        }
+    </script>
 </head>
 
 <body>
-    <script>
-        // Redirect to index.html and preserve the path for SPA routing
-        var pathname = window.location.pathname.replace('/ComputerVision', '');
-        window.location.replace('/ComputerVision/?redirect=' + pathname + window.location.search + window.location.hash);
-    </script>
+    Redirecting...
 </body>
 
 </html>
