@@ -221,6 +221,7 @@ jobs:
           echo "" > dist/.nojekyll
       - name: Log original index.html (before modification)
         run: |
+          echo "📄 Original index.html contents:"
           cat dist/index.html
       - name: Modify base href in index.html
         run: |
@@ -228,10 +229,11 @@ jobs:
           sed -i 's|<base href=".*"|<base href="/ComputerVision/_expo/"|' dist/index.html
       - name: Modify script src paths in index.html (make them absolute URLs)
         run: |
-          # Update script URLs to full URLs, prepend with the correct GitHub Pages URL
-          sed -i 's|<script src="\(/static/js/web/entry-[^"]*\)"|<script src="https://ericcchuang.github.io/ComputerVision/_expo\1"|' dist/index.html
+          # Ensure script paths are absolute and include the correct base URL
+          sed -i 's|<script src="/static/js/web/|<script src="https://ericcchuang.github.io/ComputerVision/_expo/static/js/web/|' dist/index.html
       - name: Log modified index.html (after modification)
         run: |
+          echo "📄 Modified index.html contents:"
           cat dist/index.html
       - name: Add 404.html fallback (for SPA routing)
         run: |
@@ -240,10 +242,6 @@ jobs:
         run: |
           echo "📦 Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
-      - name: Modify script src paths in index.html
-        run: |
-          # Ensure script paths are absolute and include the correct base URL
-          sed -i 's|<script src="/static/js/web/|<script src="https://ericcchuang.github.io/ComputerVision/_expo/static/js/web/|' dist/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
