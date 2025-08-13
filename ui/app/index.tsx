@@ -39,6 +39,10 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 enableScreens();
 
+export const unstable_settings = {
+  initialRouteName: "index",
+};
+
 export default function HomeScreen() {
   const cameraRef = useRef<any>(null);
   const [permission, requestPermission] = useCameraPermissions();
