@@ -223,6 +223,10 @@ jobs:
         run: |
           # Modify the base href to reflect /ComputerVision
           sed -i 's|<base href=".*"|<base href="/ComputerVision/"|' dist/index.html
+      - name: Modify script src in index.html (for correct path)
+        run: |
+          # Modify script URLs to use the full URL
+          sed -i 's|/static/js/web/|https://ericcchuang.github.io/ComputerVision/static/js/web/|' dist/index.html
       - name: Add 404.html fallback (for SPA routing)
         run: |
           echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=./index.html'></head><body><p>Redirecting...</p></body></html>" > dist/404.html
