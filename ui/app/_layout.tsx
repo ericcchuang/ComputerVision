@@ -14,6 +14,7 @@ export default function RootLayout() {
         },
         headerTitleAlign: "center",
       }}
+      initialRouteName="index"
     >
       <Slot />
     </Stack>
