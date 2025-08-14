@@ -231,7 +231,7 @@ jobs:
       - name: Fix asset paths for GitHub Pages
         run: |
           find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) \
-            -exec sed -i -E 's|([^/])/(assets/)|\1/ComputerVision\2|g' {} 
+            -exec sed -i -E 's|([^/])/(assets/)|\1/ComputerVision\2|g' {} +
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
