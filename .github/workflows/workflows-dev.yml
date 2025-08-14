@@ -232,6 +232,14 @@ jobs:
         run: |
             find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
             sed -i 's|/_expo/|/ComputerVision/_expo/|g; s|/assets/|/ComputerVision/assets/|g' {} +
+      - name: Insert dynamic script tag before </body>
+        run: |
+          # Find the entry JS file
+          ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
+          ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
+          # Insert the script tag before </body>
+          sed -i "/<\/body>/ i \
+          <script src=\"/ComputerVision/_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>" dist/index.html
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
