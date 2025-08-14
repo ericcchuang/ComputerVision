@@ -230,8 +230,8 @@ jobs:
             sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script src=\"/ComputerVision/_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g" dist/index.html
       - name: Fix all asset and chunk paths for GitHub Pages
         run: |
-            find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
-            sed -i 's|/_expo/|/ComputerVision/_expo/|g; s|/assets/|/ComputerVision/assets/|g' {} +
+          find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
+            sed -i -E 's|([^/])/(_expo/)|\1/ComputerVision\2|g; s|([^/])/(assets/)|\1/ComputerVision\2|g' {} +
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
