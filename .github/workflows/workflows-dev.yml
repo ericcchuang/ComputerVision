@@ -228,6 +228,8 @@ jobs:
             export PUBLIC_URL=/ComputerVision
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
+        env:
+          PUBLIC_URL: /ComputerVision
       
       - name: Fix asset paths for GitHub Pages
         run: |
