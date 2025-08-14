@@ -37,6 +37,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { BrowserRouter } from 'react-router-dom';
+import { registerRootComponent } from 'expo';
+
+registerRootComponent(HomeScreen);
 
 enableScreens();
 

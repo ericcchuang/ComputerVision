@@ -228,13 +228,6 @@ jobs:
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
       
-      - name: module
-        run: |
-          ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
-          ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
-
-          sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script type=\"module\" src=\"./_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g"
-
       - name: Fix asset paths for GitHub Pages
         run: |
           find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
