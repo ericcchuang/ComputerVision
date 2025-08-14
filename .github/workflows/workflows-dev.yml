@@ -225,17 +225,15 @@ jobs:
             echo "" > dist/.nojekyll
       - name: Update entry JS reference in index.html for GitHub Pages
         run: |
-          # Find the entry JS file
           ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
           ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
-
-          # Update the script tag in index.html with correct path and defer
+          # Use relative path to avoid double /ComputerVision/
           sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script src=\"./_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g" dist/index.html
 
       - name: Fix asset paths for GitHub Pages
         run: |
           find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
-          sed -i 's|/_expo/|/ComputerVision/_expo/|g; s|/assets/|/ComputerVision/assets/|g' {} +
+          sed -i 's|/_expo/|./_expo/|g; s|/assets/|./assets/|g' {} +
 
       - name: Log built JS files (debug)
         run: |
