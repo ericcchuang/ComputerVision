@@ -219,16 +219,14 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm ci
+
+      - name: Set PUBLIC_URL for GitHub Pages
+        run: echo "PUBLIC_URL=/ComputerVision" >> $GITHUB_ENV
+
       - name: Build Expo Web
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-      - name: Update entry JS reference in index.html for GitHub Pages
-        run: |
-          ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
-          ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
-          # Use relative path to avoid double /ComputerVision/
-          sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script src=\"./_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g" dist/index.html
 
       - name: Fix asset paths for GitHub Pages
         run: |
