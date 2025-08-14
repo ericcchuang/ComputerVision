@@ -223,23 +223,20 @@ jobs:
         run: |
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
-      - name: Update entry JS reference in index.html
-        run: |
-            ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
-            ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
-            sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script src=\"/ComputerVision/_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g" dist/index.html
-      - name: Fix asset paths for GitHub Pages
-        run: |
-            find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
-            sed -i 's|/_expo/|/ComputerVision/_expo/|g; s|/assets/|/ComputerVision/assets/|g' {} +
-      - name: Insert dynamic script tag before </body>
+      - name: Update entry JS reference in index.html for GitHub Pages
         run: |
           # Find the entry JS file
           ENTRY_JS=$(ls dist/_expo/static/js/web/entry-*.js | head -n 1)
           ENTRY_JS_BASENAME=$(basename "$ENTRY_JS")
-          # Insert the script tag before </body>
-          sed -i "/<\/body>/ i \
-          <script src=\"/ComputerVision/_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>" dist/index.html
+
+          # Update the script tag in index.html with correct path and defer
+          sed -i -E "s|<script src=[\"'](\.?/_expo/static/js/web/entry[^\"']*\\.js)[\"']|<script src=\"./_expo/static/js/web/$ENTRY_JS_BASENAME\" defer></script>|g" dist/index.html
+
+      - name: Fix asset paths for GitHub Pages
+        run: |
+          find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" \) -exec \
+          sed -i 's|/_expo/|/ComputerVision/_expo/|g; s|/assets/|/ComputerVision/assets/|g' {} +
+
       - name: Log built JS files (debug)
         run: |
           echo "Listing JS files in dist:"
