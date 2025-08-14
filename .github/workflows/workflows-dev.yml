@@ -225,6 +225,7 @@ jobs:
 
       - name: Build Expo Web
         run: |
+            export PUBLIC_URL=/ComputerVision
             npx expo export --platform web --output-dir dist
             echo "" > dist/.nojekyll
       
