@@ -78,6 +78,9 @@
       }
     },
     "extra": {
+      "router": {
+        "basePath": "/ComputerVision"
+      },
       "eas": {
         "projectId": "8f85c4b7-15ca-4aba-ac69-183a7208c59c"
       }
