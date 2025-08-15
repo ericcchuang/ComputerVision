@@ -240,6 +240,7 @@ jobs:
         run: |
           echo "Listing JS files in dist:"
           find dist -type f -name "*.js" | sort
+          
       - name: Add 404.html for SPA routing
         run: |
           echo '<!DOCTYPE html><html><head><meta charset="UTF-8" /><title>Redirecting</title><script>window.location.replace("/ComputerVision/#/");</script></head><body><p>Redirecting to homepage...</p></body></html>' > dist/404.html
