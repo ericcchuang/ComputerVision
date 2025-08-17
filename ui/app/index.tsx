@@ -25,7 +25,8 @@ import {
 } from "react-native-gesture-handler";
 import openMap from "react-native-open-maps";
 import { Stack } from "expo-router";
-import { endPoints } from './endpoints';
+//import { endPoints } from './endpoints';
+import * as endPoints from "./endpoints.json";
 import * as FileSystem from "expo-file-system";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as Speech from "expo-speech";

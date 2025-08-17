@@ -3,23 +3,20 @@
 ComputerVision is an application that can take an image and returns what is the predicted bus number. The detection is built on OpenVINO open source machine learning libraries in Python and hosted on a FastAPI Server, and the interfact is built on React Native allowing exports to web, iOS, and Android via GitHub actions pipelines. 
 
 **Table of Contents**
-1. [Backend Setup (/api)](#backend-setup-api)
+1. [Current Deployments](#current-deployments)
+2. [Backend Setup (/api)](#backend-setup-api)
    - [Detection Model](#detection-model)
-   - [Voice Commands](#voice-commands)
-2. [Frontend (/ui)](#frontend-ui)
-3. [Pipelines](#pipelines)
-4. [iOS Ad-Hoc Distribution: Adding Device UUIDs](#ios-ad-hoc-distribution-adding-device-uuids)
+3. [Frontend (/ui)](#frontend-ui)
+4. [Pipelines](#pipelines)
+5. [iOS Ad-Hoc Distribution: Adding Device UUIDs](#ios-ad-hoc-distribution-adding-device-uuids)
+
+## Current Deployments
+
+Frontend is deployed at [https://ericcchuang-computer-vision.vercel.app/](https://ericcchuang-computer-vision.vercel.app/) via vercel, and backend is currently hosted on Render, which cold boots every time you want to visit the site. Please wait while backend deploys.
 
 ## Backend Setup (/api)
 
-Files for the backend are found in the `/api` folder. In order to get the backend to run locally, you will have to set up a few things on your system. [**Python 3.11.9**](https://www.python.org/downloads/release/python-3119/) and [**ffmpeg**](https://ffmpeg.org/) need to be installed locally.
-
-If you have chocolatey, you can install ffmpeg via powershell as administrator.
-```powershell
-choco install ffmpeg
-```
-
-Ensure both are in your system's PATH before proceeding.
+Files for the backend are found in the `/api` folder. In order to get the backend to run locally, you will have to set up a few things on your system. [**Python 3.11.9**](https://www.python.org/downloads/release/python-3119/) will need to be installed locally. Ensure it is in your system's PATH before proceeding.
 
 ---
 
@@ -49,16 +46,6 @@ The app has 4 endpoints, with 2 endpoints for detection
 Vehicle data is called from NJ Transit's Clever Devices ("endpoint" in `options.json`), and `VEHICLE_INFO.json`. `garage_map.json` converts "AssignedLocation" from `VEHICLE_INFO.json` into its actual location.
 
 The backend also interfaces with the Google Maps API to convert lat and lon into a readable address. To run the API locally, generate an API key from Google Cloud Platform and store it in an the `.env` file. To run it on the cloud you will need it in the environment variables.
-
----
-
-### Voice Commands
-Voice commands are an incomplete backend feature that allows users to interact with the app via microphone. It requires ffmpeg and uses an OpenVINO Model and 2 API endpoints.
-
-- [**Speech to Text Model**](https://docs.openvino.ai/2023.3/notebooks/211-speech-to-text-with-output.html)
-- **speechEndpoint, silenceEndpoint**
-
-On the information screen, if the microphone is enabled, users can speak a wake word (currently any word) followed by a command. Commands are fuzzed using the list "commands_list" in `options.json`, and valid commands are generated based on both the fuzzed list and the return fields from the API. Most commands simply activate text to speech for that return field.
 
 ## Frontend (/ui)
 
