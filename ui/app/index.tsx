@@ -265,6 +265,7 @@ export default function HomeScreen() {
     busImageRef.current = null;
     scanningRef.current = true;
     while (scanningRef.current) {
+      console.log('API base URL:', process.env.NEXT_PUBLIC_API);
       if (cameraRef.current) {
         try {
           const photo = await cameraRef.current.takePictureAsync({
