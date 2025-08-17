@@ -12,7 +12,7 @@ ComputerVision is an application that can take an image and returns what is the 
 
 ## Current Deployments
 
-Frontend is deployed at [https://ericcchuang-computer-vision.vercel.app/](https://ericcchuang-computer-vision.vercel.app/) via vercel, and backend is currently hosted on Render, which cold boots every time you want to visit the site. Please wait while backend deploys.
+Frontend is deployed at [https://ericcchuang-computer-vision.vercel.app/](https://ericcchuang-computer-vision.vercel.app/) via vercel, and backend is currently hosted on Render, which cold boots every time you want to visit the site. Please wait about a minute while backend deploys.
 
 ## Backend Setup (/api)
 

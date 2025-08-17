@@ -1,4 +1,0 @@
-{
-    "scanEndpoint": "https://dev-fastapi-service-97302177308.us-east4.run.app/scanBusNumber",
-    "busInfoEndpoint": "https://dev-fastapi-service-97302177308.us-east4.run.app/busInfo"
-}

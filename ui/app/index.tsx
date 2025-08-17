@@ -42,6 +42,8 @@ import Constants from 'expo-constants';
 enableScreens();
 
 export default function HomeScreen() {
+  const [apiAwake, setApiAwake] = useState(false);
+
   useEffect(() => {
     const baseUrl =
       process.env.EXPO_PUBLIC_API ??
@@ -57,6 +59,7 @@ export default function HomeScreen() {
       try {
         const res = await fetch(`${baseUrl}/ping`, { method: 'GET' });
         console.log('API wake-up response:', res.status);
+        setApiAwake(true);
       } catch (err) {
         console.warn('Failed to wake API:', err);
       }
@@ -457,7 +460,7 @@ export default function HomeScreen() {
         pictureSize="highest"
       >
         <View style={styles.cameraControlView}>
-          <CameraControls />
+          <CameraControls apiAwake={apiAwake} cameraGranted={cameraGranted} />
         </View>
       </CameraView>
     );
@@ -551,7 +554,12 @@ export default function HomeScreen() {
     })();
   }
 
-  function CameraControls() {
+  interface CameraControlsProps {
+    apiAwake: boolean;
+    cameraGranted: boolean;
+  }
+
+  const CameraControls: React.FC<CameraControlsProps> = React.memo(({ apiAwake, cameraGranted }) => {
     const inputAccessoryViewID = "numberInput";
     return (
       <View style={[styles.cardView, cardWidth, { flexDirection: "column" }]}>
@@ -563,7 +571,7 @@ export default function HomeScreen() {
                 color="#0000ff"
                 style={{ paddingVertical: 10 }}
               />
-              <Text style={{ paddingBottom: 10 }}>Scanning...</Text>
+              <Text style={{ paddingBottom: 10 }}>{apiAwake ? 'Scanning...' : 'Waiting for response...'}</Text>
             </>
           )}
           <View style={styles.numberInput}>
@@ -605,7 +613,7 @@ export default function HomeScreen() {
         </View>
       </View>
     );
-  }
+  });
 
   const busNumberSubmitRef = useRef<string>("");
 
@@ -615,7 +623,7 @@ export default function HomeScreen() {
       {/* Control Panel Before Scanning or Submitting */}
       {busNumberRef.current === null && !cameraGranted && (
         <View style={[styles.busNumberContainer]}>
-          <CameraControls />
+          <CameraControls apiAwake={apiAwake} cameraGranted={cameraGranted} />
         </View>
       )}
       {/* Control Panel After Scanning or Submitting */}
@@ -859,21 +867,23 @@ export default function HomeScreen() {
               </>
             ) : (
               <>
-                <GestureDetector gesture={pinchGesture}>
-                  <CameraView
-                    ref={cameraRef}
-                    facing={"back"}
-                    zoom={zoom}
-                    style={cameraStyle}
-                    animateShutter={false}
-                    onCameraReady={handleCameraReady}
-                    pictureSize="highest"
-                  >
-                    <View style={styles.cameraControlView}>
-                      <CameraControls />
-                    </View>
-                  </CameraView>
-                </GestureDetector>
+                <View style={styles.cameraContainer}>
+                  <GestureDetector gesture={pinchGesture}>
+                    <CameraView
+                      ref={cameraRef}
+                      facing={"back"}
+                      zoom={zoom}
+                      style={cameraStyle}
+                      animateShutter={false}
+                      onCameraReady={handleCameraReady}
+                      pictureSize="highest"
+                    >
+                    </CameraView>
+                  </GestureDetector>
+                  <View style={styles.cameraControlView}>
+                    <CameraControls apiAwake={apiAwake} cameraGranted={cameraGranted} />
+                  </View>
+                </View>
               </>
             )
           ) : (
