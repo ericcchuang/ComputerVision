@@ -7,5 +7,4 @@ const config = {
     busInfoEndpoint: `${api}/busInfo`
 };
 
-fs.writeFileSync('public/config.json', JSON.stringify(config, null, 2));
-console.log('config.json written to public/');
+fs.writeFileSync('app/endpoints.json', JSON.stringify(config, null, 2));
