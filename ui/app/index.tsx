@@ -25,8 +25,8 @@ import {
 } from "react-native-gesture-handler";
 import openMap from "react-native-open-maps";
 import { Stack } from "expo-router";
-//import { endPoints } from './endpoints';
-import * as endPoints from "./endpoints.json";
+import { endPoints } from '../endpoints';
+//import * as endPoints from "./endpoints.json";
 import * as FileSystem from "expo-file-system";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as Speech from "expo-speech";
@@ -37,10 +37,34 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Constants from 'expo-constants';
 
 enableScreens();
 
 export default function HomeScreen() {
+  useEffect(() => {
+    const baseUrl =
+      process.env.EXPO_PUBLIC_API ??
+      Constants.expoConfig?.extra?.EXPO_PUBLIC_API ??
+      '';
+
+    if (!baseUrl) {
+      console.warn('No API base URL defined');
+      return;
+    }
+
+    const wakeApi = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/ping`, { method: 'GET' });
+        console.log('API wake-up response:', res.status);
+      } catch (err) {
+        console.warn('Failed to wake API:', err);
+      }
+    };
+
+    wakeApi();
+  }, []);
+
   const cameraRef = useRef<any>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraGranted, setCameraGranted] = useState(false);
@@ -265,7 +289,6 @@ export default function HomeScreen() {
     busImageRef.current = null;
     scanningRef.current = true;
     while (scanningRef.current) {
-      console.log('API base URL:', process.env.NEXT_PUBLIC_API);
       if (cameraRef.current) {
         try {
           const photo = await cameraRef.current.takePictureAsync({
