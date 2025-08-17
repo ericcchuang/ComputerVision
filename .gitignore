@@ -53,3 +53,5 @@ api/model
 api/output.wav
 api/.env
 .env
+
+.expo
