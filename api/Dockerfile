@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas-dev \
     liblapack-dev \
     wget unzip \
-    libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx \
 
 # Set working directory
 WORKDIR /app
