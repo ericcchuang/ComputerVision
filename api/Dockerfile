@@ -1,6 +1,14 @@
 FROM python:3.11-slim
 
-# Install system dependencies
+# Add essential tools and restore missing repos
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    gnupg \
+    software-properties-common && \
+    add-apt-repository universe || true
+
+# Install required packages
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ffmpeg \
@@ -18,6 +26,7 @@ RUN apt-get update && \
     libgl1-mesa-glx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
 
 # Set working directory
 WORKDIR /app
